@@ -1,9 +1,12 @@
+import { Subject } from 'rxjs/Rx';
 import { Injectable, Inject } from '@angular/core';
-import { MessageReader, GetAllTilesMessage } from '../../../infotainment-pi-core/core';
+import { MessageReader, GetAllTilesMessage, TileBase } from '../../../infotainment-pi-core/core';
 import { $WebSocket } from "angular2-websocket/angular2-websocket";
 
 @Injectable()
 export class InfotainmentPiClientService {
+
+  allTilesSubject: Subject<TileBase[]> = new Subject<TileBase[]>();
 
   constructor(private ws: $WebSocket, private messageReader: MessageReader) {
     ws.onMessage(

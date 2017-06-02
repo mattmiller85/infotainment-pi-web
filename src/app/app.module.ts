@@ -1,7 +1,7 @@
 import { environment } from '../environments/environment';
 import { InfotainmentPiClientService } from './infotainment-pi-client.service';
 import { MessageReader } from '../../../infotainment-pi-core/core';
-import * as socket from "angular2-websocket/angular2-websocket";
+import { $WebSocket } from "angular2-websocket/angular2-websocket";
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, InjectionToken } from '@angular/core';
@@ -12,8 +12,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { TileListComponent } from './tile-list/tile-list.component';
 import { TileComponent } from './tile/tile.component';
+import { MessageDisplayComponent } from './message-display/message-display.component';
 
-let ws = new socket.$WebSocket(environment.wsUrl);
+let ws = new $WebSocket(environment.wsUrl);
 
 const appRoutes: Routes = [
   // { path: 'crisis-center', component: CrisisListComponent },
@@ -33,7 +34,8 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     TileListComponent,
-    TileComponent
+    TileComponent,
+    MessageDisplayComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,7 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [MessageReader, { provide: socket.$WebSocket, useValue: ws }, InfotainmentPiClientService],
+  providers: [MessageReader, { provide: $WebSocket, useValue: ws }, InfotainmentPiClientService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
