@@ -1,7 +1,7 @@
+import { $WebSocket } from 'angular2-websocket';
 import { environment } from '../environments/environment';
 import { InfotainmentPiClientService } from './infotainment-pi-client.service';
 import { MessageReader } from '../../../infotainment-pi-core/core';
-import { $WebSocket } from "angular2-websocket/angular2-websocket";
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, InjectionToken } from '@angular/core';
