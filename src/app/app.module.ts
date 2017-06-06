@@ -1,4 +1,3 @@
-import { $WebSocket } from 'angular2-websocket';
 import { environment } from '../environments/environment';
 import { InfotainmentPiClientService } from './infotainment-pi-client.service';
 import { MessageReader } from '../../../infotainment-pi-core/core';
@@ -13,18 +12,19 @@ import { AppComponent } from './app.component';
 import { TileListComponent } from './tile-list/tile-list.component';
 import { TileComponent } from './tile/tile.component';
 import { MessageDisplayComponent } from './message-display/message-display.component';
-
-let ws = new $WebSocket(environment.wsUrl);
+import { TileDetailsComponent } from './tile-details/tile-details.component';
+import { SingleAudioFileTileComponent } from './single-audio-file-tile/single-audio-file-tile.component';
 
 const appRoutes: Routes = [
-  // { path: 'crisis-center', component: CrisisListComponent },
-  { path: 'tile/:id',      component: TileComponent },
+  { 
+    path: 'tile/:id', 
+    component: TileDetailsComponent },
   {
     path: 'tile-list',
     component: TileListComponent
   },
   { path: '',
-    redirectTo: '/tile-list',
+    redirectTo: 'tile-list',
     pathMatch: 'full'
   },
   // { path: '**', component: PageNotFoundComponent }
@@ -35,7 +35,9 @@ const appRoutes: Routes = [
     AppComponent,
     TileListComponent,
     TileComponent,
-    MessageDisplayComponent
+    MessageDisplayComponent,
+    TileDetailsComponent,
+    SingleAudioFileTileComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,7 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [MessageReader, { provide: $WebSocket, useValue: ws }, InfotainmentPiClientService],
+  providers: [MessageReader, InfotainmentPiClientService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

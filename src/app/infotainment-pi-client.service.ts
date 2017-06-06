@@ -1,35 +1,53 @@
+import { ReadyState } from '@angular/http';
+import { environment } from '../environments/environment';
 import { Subject } from 'rxjs/Rx';
 import { Injectable, Inject } from '@angular/core';
-import { MessageReader, GetAllTilesMessage, ReturnAllTilesMessage, TileBase, MessageType } from '../../../infotainment-pi-core/core';
-import { $WebSocket } from "angular2-websocket/angular2-websocket";
+import { MessageReader, MessageBase, GetAllTilesMessage, ReturnAllTilesMessage, GetTileByIdMessage, ReturnTileMessage, TileBase, MessageType } from '../../../infotainment-pi-core/core';
 
 @Injectable()
 export class InfotainmentPiClientService {
 
-  allTilesSubject: Subject<TileBase[]> = new Subject<TileBase[]>();
+  private ws: WebSocket;
+  private _batchedTasks: Array<MessageBase> = new  Array<MessageBase>();
 
-  constructor(private ws: $WebSocket, private messageReader: MessageReader) {
-    ws.onMessage(
+  allTilesSubject: Subject<TileBase[]> = new Subject<TileBase[]>();
+  tileSubject: Subject<TileBase> = new Subject<TileBase>();
+
+  constructor(private messageReader: MessageReader) {
+    this.ws = new WebSocket(environment.wsUrl);
+    this.ws.onmessage = 
       (msg: MessageEvent) => {
         let message = this.messageReader.getMessage(msg.data);
         let allTilesMessage = message as ReturnAllTilesMessage;
-        if(allTilesMessage != null && allTilesMessage.type == MessageType.allTiles)
+        if(allTilesMessage != null && allTilesMessage.type == MessageType.allTiles){
           this.allTilesSubject.next(allTilesMessage.tiles);
-      },
-      { autoApply: false }
-    );
+          return;
+        }
+        let tileMessage = message as ReturnTileMessage;
+        if(tileMessage != null && tileMessage.tile != null)
+          this.tileSubject.next(tileMessage.tile);
+      };
+    this.ws.onopen = (e: MessageEvent) => {
+        this._batchedTasks.forEach(msg => {
+          this.ws.send(JSON.stringify(msg));
+        });
+        this._batchedTasks.length = 0;
+    };
+  }
+
+  private batchOrSendMessage<T extends MessageBase>(message: T){
+    if(this.ws.readyState != ReadyState.Open){
+      this._batchedTasks.push(message);      
+    }else{
+      this.ws.send(JSON.stringify(message));
+    }
   }
 
   askForAllTiles() {
-    this.ws.send(new GetAllTilesMessage()).subscribe(
-      (msg) => {
-        console.log("next", msg.data);
-      },
-      (msg) => {
-        console.log("error", msg);
-      },
-      () => {
-        console.log("complete");
-      })
+    this.batchOrSendMessage(new GetAllTilesMessage());
+  }
+
+  getTileById(id: number) {
+    this.batchOrSendMessage(new GetTileByIdMessage(id));
   }
 }

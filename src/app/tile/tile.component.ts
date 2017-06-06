@@ -7,9 +7,9 @@ import { TileBase } from '../../../../infotainment-pi-core/core';
   templateUrl: './tile.component.html',
   styleUrls: ['./tile.component.css']
 })
-export class TileComponent implements OnInit {
+export class TileComponent<T extends TileBase> implements OnInit {
 
-  @Input() tile: TileBase;
+  @Input() tile: T;
 
   constructor() { }
 

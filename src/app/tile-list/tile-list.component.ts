@@ -1,5 +1,5 @@
 import { InfotainmentPiClientService } from '../infotainment-pi-client.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TileBase } from '../../../../infotainment-pi-core/core';
 
@@ -10,12 +10,16 @@ import { TileBase } from '../../../../infotainment-pi-core/core';
 })
 export class TileListComponent implements OnInit {
 
-  tiles: any[] = [];
+  tiles: Array<TileBase> = [];
 
-  constructor(private service: InfotainmentPiClientService) { }
+  constructor(private service: InfotainmentPiClientService) {
+    this.tiles = new Array<any>();
+    this.service.allTilesSubject.subscribe(tls => {
+        tls.forEach(t => { this.tiles.push(t); });
+    });
+  }
 
   ngOnInit() {
-    this.service.allTilesSubject.subscribe(tiles => { this.tiles.length = 0; tiles.forEach(tile => { debugger;this.tiles.push({}); }); } );
     this.service.askForAllTiles();
   }
 
