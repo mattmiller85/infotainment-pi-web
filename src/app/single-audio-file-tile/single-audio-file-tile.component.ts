@@ -13,8 +13,12 @@ export class SingleAudioFileTileComponent implements OnInit {
 
   @Input() tile: SingleAudioFileTile = new SingleAudioFileTile();
   
-  constructor() { }
+  constructor(private service: InfotainmentPiClientService) { }
   
   ngOnInit() {
+  }
+
+  play(){
+    this.service.playAudioFile(this.tile);
   }
 }

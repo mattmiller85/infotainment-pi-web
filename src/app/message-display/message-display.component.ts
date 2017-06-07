@@ -8,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MessageDisplayComponent implements OnInit {
 
-  constructor(private service: InfotainmentPiClientService) { }
+  lastMessage: string = "Connecting...";
+
+  constructor(private service: InfotainmentPiClientService) { 
+    service.greetingMessageSubject.subscribe(gm => this.lastMessage = "You're connected to InfotainmentPi!");
+    service.connectionClosedSubject.subscribe(msg => this.lastMessage = msg.message);
+  }
 
   ngOnInit() {
+    
   }
 
 }
