@@ -14,6 +14,7 @@ export class InfotainmentPiClientService {
   tileSubject: Subject<core.TileBase> = new Subject<core.TileBase>();
   greetingMessageSubject: Subject<core.GreetingMessage> = new Subject<core.GreetingMessage>();
   connectionClosedSubject: Subject<{message:string}> = new Subject<{message:string}>();
+  playerStatusSubject: Subject<{status:string, duration:number}> = new Subject();
 
   private retryInterval: Subscription;  
 
@@ -32,19 +33,26 @@ export class InfotainmentPiClientService {
           return;
         }
         let tileMessage = message as core.ReturnTileMessage;
-        if(tileMessage != null && tileMessage.tile != null){
+        if(tileMessage != null && tileMessage.tile != null && tileMessage.type == core.MessageType.returnTile){
           this.tileSubject.next(tileMessage.tile);
           return;
         }
         let greetingMessage = message as core.GreetingMessage;
-        if(greetingMessage != null){
+        if(greetingMessage != null && tileMessage.type == core.MessageType.greetingFromServer){
           this.greetingMessageSubject.next(greetingMessage);
           return;
         } 
+        let playerStatusMessage = message as core.SongStatusMessage;
+        debugger;
+        if(playerStatusMessage != null && playerStatusMessage.type == core.MessageType.songStatus){
+          this.playerStatusSubject.next({ status: `${playerStatusMessage.tile.name} ${playerStatusMessage.durationPlaying == -1 ? "stopped" : playerStatusMessage.durationPlaying.toString()}.`, duration: playerStatusMessage.durationPlaying });
+          return;
+        }
       };
     this.ws.onclose = () => {
-      this.connectionClosedSubject.next({ message: "Connection lost, retrying..." });
-      this.retryInterval = Observable.timer(0, 5000).subscribe(t => this.configureSocket());
+      //TODO - figure out why the retry has a loop somewhere
+      //this.connectionClosedSubject.next({ message: "Connection lost, retrying..." });
+      //this.retryInterval = Observable.timer(0, 5000).subscribe(t => this.configureSocket());
     };
     this.ws.onopen = (e: MessageEvent) => {
         if(this.retryInterval != null){

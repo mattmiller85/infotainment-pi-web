@@ -21,4 +21,8 @@ export class SingleAudioFileTileComponent implements OnInit {
   play(){
     this.service.playAudioFile(this.tile);
   }
+
+  stop(){
+    this.service.stopAudioFile();
+  }
 }

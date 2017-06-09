@@ -16,7 +16,8 @@ export class TileListComponent implements OnInit {
   constructor(private service: InfotainmentPiClientService, private router: Router) {
     this.tiles = new Array<any>();
     this.service.allTilesSubject.subscribe(tls => {
-        tls.forEach(t => { this.tiles.push(t); });
+        this.tiles.length = 0;
+        tls.forEach(t => this.tiles.push(t));
     });
   }
 
