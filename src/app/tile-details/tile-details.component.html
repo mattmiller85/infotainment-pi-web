@@ -2,5 +2,5 @@
     <button class="btn btn-default" [routerLink]="['']"><i class="fa fa-home"></i></button>
 </div>
 <div class="row" *ngIf="tile">  
-  <single-audio-file-tile *ngIf="tile.type == TileType.single_audio_file" [tile]="tile"></single-audio-file-tile>
+  <single-audio-file-tile *ngIf="tile.type == TileType.single_audio_file" [tile]="tile" [current_progress]="current_duration"></single-audio-file-tile>
 </div>

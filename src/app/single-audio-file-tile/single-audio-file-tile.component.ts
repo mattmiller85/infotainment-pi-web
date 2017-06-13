@@ -12,7 +12,8 @@ import { TileType, SingleAudioFileTile } from '../../../../infotainment-pi-core/
 export class SingleAudioFileTileComponent implements OnInit {
 
   @Input() tile: SingleAudioFileTile = new SingleAudioFileTile();
-  
+  @Input() current_progress: number = 0;
+
   constructor(private service: InfotainmentPiClientService) { }
   
   ngOnInit() {

@@ -10,8 +10,9 @@ export class InfotainmentPiClientService {
   private ws: WebSocket;
   private _batchedTasks: Array<core.MessageBase> = new  Array<core.MessageBase>();
 
+  tileUpdates: Map<number, Subject<{type: core.MessageType, tile?:core.TileBase}>> = new Map<number, Subject<{type: core.MessageType, tile?:core.TileBase}>>(); 
+
   allTilesSubject: Subject<core.TileBase[]> = new Subject<core.TileBase[]>();
-  tileSubject: Subject<core.TileBase> = new Subject<core.TileBase>();
   greetingMessageSubject: Subject<core.GreetingMessage> = new Subject<core.GreetingMessage>();
   connectionClosedSubject: Subject<{message:string}> = new Subject<{message:string}>();
   playerStatusSubject: Subject<{status:string, duration:number}> = new Subject();
@@ -29,22 +30,27 @@ export class InfotainmentPiClientService {
         let message = this.messageReader.getMessage(msg.data);
         let allTilesMessage = message as core.ReturnAllTilesMessage;
         if(allTilesMessage != null && allTilesMessage.type == core.MessageType.allTiles){
+          //go ahead and new up the observables so they're ready for subscriptions for each of the tiles
+          allTilesMessage.tiles.forEach(tile => this.tileUpdates.set(tile.id, new Subject<{tile?:core.TileBase}>()));
           this.allTilesSubject.next(allTilesMessage.tiles);
           return;
         }
+
         let tileMessage = message as core.ReturnTileMessage;
         if(tileMessage != null && tileMessage.tile != null && tileMessage.type == core.MessageType.returnTile){
-          this.tileSubject.next(tileMessage.tile);
+          this.tileUpdates.get(tileMessage.tile.id).next(tileMessage);
           return;
         }
+
         let greetingMessage = message as core.GreetingMessage;
         if(greetingMessage != null && tileMessage.type == core.MessageType.greetingFromServer){
           this.greetingMessageSubject.next(greetingMessage);
           return;
-        } 
+        }
+
         let playerStatusMessage = message as core.SongStatusMessage;
-        debugger;
         if(playerStatusMessage != null && playerStatusMessage.type == core.MessageType.songStatus){
+          this.tileUpdates.get(playerStatusMessage.tile.id).next(playerStatusMessage);
           this.playerStatusSubject.next({ status: `${playerStatusMessage.tile.name} ${playerStatusMessage.durationPlaying == -1 ? "stopped" : playerStatusMessage.durationPlaying.toString()}.`, duration: playerStatusMessage.durationPlaying });
           return;
         }

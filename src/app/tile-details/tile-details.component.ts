@@ -2,7 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { InfotainmentPiClientService } from '../infotainment-pi-client.service';
 import { Subscription } from 'rxjs/Rx';
 import { Component, OnInit } from '@angular/core';
-import { TileBase, TileType, SingleAudioFileTile } from '../../../../infotainment-pi-core/core';
+import { TileBase, TileType, SingleAudioFileTile, MessageType, SongStatusMessage } from '../../../../infotainment-pi-core/core';
 
 @Component({
   selector: 'tile-details',
@@ -13,24 +13,29 @@ export class TileDetailsComponent implements OnInit {
 
   public TileType = TileType;
   tile: TileBase;
+  current_duration: number = 0;
+
   private _paramSub: Subscription;
+  private _tileSub: Subscription;  
 
   constructor(private service: InfotainmentPiClientService, private route: ActivatedRoute) { }
 
   ngOnInit() {    
     this._paramSub = this.route.params.subscribe(params => {
-      this.service.getTileById(params['id']);
-      this.service.tileSubject.subscribe(t => {
-        if(t.id != params['id'])
-          return;
-        this.tile = t;
+      this._tileSub = this.service.tileUpdates.get(Number(params['id'])).subscribe(message => {
+        this.tile = message.tile;
+        if(message.type == MessageType.songStatus)
+        {
+          let msg = message as SongStatusMessage;
+          this.current_duration = msg.durationPlaying;
+        }
       });
+      this.service.getTileById(Number(params['id']));
     });
   }
 
   ngOnDestroy() {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
     this._paramSub.unsubscribe();
+    this._tileSub.unsubscribe();
   }
 }

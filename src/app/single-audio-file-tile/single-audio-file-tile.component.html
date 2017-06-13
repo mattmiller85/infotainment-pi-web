@@ -13,6 +13,11 @@
     <tile [tile]="tile"></tile>
 </div>
 <div class="row">
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="current_progress" aria-valuemin="0" [attr.aria-valuemax]="tile.duration_seconds"></div>
+    </div>
+</div>
+<div class="row">
     <button (click)="play()" class="btn btn-primary"><i class="fa fa-play"></i></button>
     <button (click)="stop()" class="btn btn-primary"><i class="fa fa-stop"></i></button>
 </div>
