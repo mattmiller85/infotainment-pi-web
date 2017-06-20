@@ -1,27 +1,29 @@
 import { MessageType, SingleAudioFileTile, SongStatusMessage } from '../../../../infotainment-pi-core/core';
 import { InfotainmentPiClientService } from '../infotainment-pi-client.service';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 
 @Component({
-  selector: 'single-audio-file-tile',
-  templateUrl: './single-audio-file-tile.component.html',
-  styleUrls: ['./single-audio-file-tile.component.css'],  
+  selector: 'single-audio-file-tile-small',
+  templateUrl: './single-audio-file-tile-small.component.html',
+  styleUrls: ['./single-audio-file-tile-small.component.css']
 })
-export class SingleAudioFileTileComponent implements OnInit, OnDestroy {
+export class SingleAudioFileTileSmallComponent implements OnInit, OnDestroy {
 
   @Input() tile: SingleAudioFileTile = new SingleAudioFileTile();
-  current_progress: number = 0;
+  isPlaying: boolean = false;
+
   private _tileSub: Subscription;
 
-  constructor(private service: InfotainmentPiClientService) { }
-  
+  constructor(private service: InfotainmentPiClientService, private route: ActivatedRoute) { }
+
   ngOnInit() {
     this._tileSub = this.service.updatesFor(this.tile).subscribe(message => {
       if(message.type == MessageType.songStatus)
       {
         let msg = message as SongStatusMessage;
-        this.current_progress = msg.durationPlaying;
+        this.isPlaying = msg.durationPlaying > 0;
       }
     });
   }
@@ -30,11 +32,4 @@ export class SingleAudioFileTileComponent implements OnInit, OnDestroy {
     this._tileSub.unsubscribe();
   }
 
-  play(){
-    this.service.playAudioFile(this.tile);
-  }
-
-  stop(){
-    this.service.stopAudioFile();
-  }
 }

@@ -1,6 +1,5 @@
+import { TileBase, TileType } from '../../../../infotainment-pi-core/core';
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TileBase } from '../../../../infotainment-pi-core/core';
 
 @Component({
   selector: 'tile',
@@ -8,6 +7,8 @@ import { TileBase } from '../../../../infotainment-pi-core/core';
   styleUrls: ['./tile.component.css']
 })
 export class TileComponent<T extends TileBase> implements OnInit {
+
+  public TileType = TileType;
 
   @Input() tile: T;
 

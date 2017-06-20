@@ -1,3 +1,4 @@
 div.tile_thumb_container{
     cursor: pointer;
+    display: inline-block;
 }

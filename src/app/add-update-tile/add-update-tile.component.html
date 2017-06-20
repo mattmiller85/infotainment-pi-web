@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col">
+    <a role="button" class="btn btn-lg btn-primary" [routerLink]="['/tile-list']">Home <i class="fa fa-home"></i></a>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <form>
+      <div class="form-group">
+        <label for="tileTypeSelect">Tile type</label>
+        <select id="tileTypeSelect" name="tileTypeSelect" class="form-control" [(ngModel)]="selectedType">
+          <option *ngFor="let key of keys" [value]="key">{{ tileTypes[key] }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="tileName">Name</label>
+        <input type="text" class="form-control" id="tileName" name="tileName" aria-describedby="nameHelp" placeholder="Enter name">
+        <small id="nameHelp" class="form-text text-muted">Common name to use for this tile</small>
+      </div>
+      <div class="form-group">
+        <label for="tileDescription">Description</label>
+        <input type="text" class="form-control" id="tileDescription" name="tileDescription" aria-describedby="descriptionHelp" placeholder="Enter description">
+        <small id="descriptionHelp" class="form-text text-muted">Long description of the tile</small>
+      </div>
+      <div id="single_audio_file_tile_fields" *ngIf="tileTypes[selectedType] == 'single_audio_file'">
+        <label for="pathToAudio">Path to mp3</label>
+        <input type="text" class="form-control" id="pathToAudio" name="pathToAudio" aria-describedby="pathToAudioHelp" placeholder="Enter path to mp3">
+        <small id="pathToAudioHelp" class="form-text text-muted">Path to the mp3 on the pi</small>
+      </div>
+      <div id="obd_reader_fields" *ngIf="tileTypes[selectedType] == 'digital_obd_ii_sensor'">
+        <label for="sensorNumber">Sensor number</label>
+        <input type="text" class="form-control" id="sensorNumber" name="sensorNumber" aria-describedby="sensorNumberHelp" placeholder="Enter sensor number">
+        <small id="sensorNumberHelp" class="form-text text-muted">The OBD sensor number</small>
+      </div>
+      <button type="button" class="btn btn-success">Save</button>
+    </form>
+  </div>
+</div>

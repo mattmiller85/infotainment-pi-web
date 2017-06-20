@@ -1,6 +1,7 @@
 <div class="card">
   <div class="card-img-top">
-    <i class="fa fa-music fa-5x"></i>
+    <single-audio-file-tile-small *ngIf="tile.type == TileType.single_audio_file" [tile]="tile"></single-audio-file-tile-small>
+    <obd-reading-tile-small *ngIf="tile.type == TileType.digital_obd_ii_sensor" [tile]="tile"></obd-reading-tile-small>
   </div>
   <div class="card-block">
     <h4 class="card-title">{{ tile.name }}</h4>

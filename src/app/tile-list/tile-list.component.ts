@@ -1,8 +1,7 @@
-import { Router, ActivatedRoute } from '@angular/router';
-import { InfotainmentPiClientService } from '../infotainment-pi-client.service';
-import { Component, OnInit, NgZone } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TileBase } from '../../../../infotainment-pi-core/core';
+import { InfotainmentPiClientService } from '../infotainment-pi-client.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'tile-list',

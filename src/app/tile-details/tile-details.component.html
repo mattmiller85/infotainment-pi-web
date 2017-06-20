@@ -1,6 +1,11 @@
 <div class="row">
-    <button class="btn btn-default" [routerLink]="['']"><i class="fa fa-home"></i></button>
+  <div class="col">
+    <button class="btn btn-lg btn-default" [routerLink]="['']"><i class="fa fa-home"></i></button>
+  </div>
 </div>
 <div class="row" *ngIf="tile">  
-  <single-audio-file-tile *ngIf="tile.type == TileType.single_audio_file" [tile]="tile" [current_progress]="current_duration"></single-audio-file-tile>
+  <div class="col">
+    <single-audio-file-tile *ngIf="tile.type == TileType.single_audio_file" [tile]="tile"></single-audio-file-tile>
+    <obd-reading-tile *ngIf="tile.type == TileType.digital_obd_ii_sensor" [tile]="tile"></obd-reading-tile>
+  </div>
 </div>

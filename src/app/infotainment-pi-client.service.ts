@@ -1,8 +1,8 @@
-import { ReadyState } from '@angular/http';
-import { environment } from '../environments/environment';
-import { Observable, Subject, Subscription } from 'rxjs/Rx';
-import { Injectable, Inject } from '@angular/core';
 import * as core from '../../../infotainment-pi-core/core';
+import { environment } from '../environments/environment';
+import { Injectable } from '@angular/core';
+import { ReadyState } from '@angular/http';
+import { Subject, Subscription } from 'rxjs/Rx';
 
 @Injectable()
 export class InfotainmentPiClientService {
@@ -10,11 +10,24 @@ export class InfotainmentPiClientService {
   private ws: WebSocket;
   private _batchedTasks: Array<core.MessageBase> = new  Array<core.MessageBase>();
 
-  tileUpdates: Map<number, Subject<{type: core.MessageType, tile?:core.TileBase}>> = new Map<number, Subject<{type: core.MessageType, tile?:core.TileBase}>>(); 
+  private tileUpdates: Map<number, Subject<{type: core.MessageType, tile?:core.TileBase}>> = new Map<number, Subject<{type: core.MessageType, tile?:core.TileBase}>>();
+
+  updatesFor(tile: core.TileBase): Subject<{type: core.MessageType, tile?:core.TileBase}>
+  updatesFor(tileId: number): Subject<{type: core.MessageType, tile?:core.TileBase}>
+  updatesFor(tileThing: any): Subject<{type: core.MessageType, tile?:core.TileBase}>{
+    let tileId = 0;
+    if(typeof(tileThing) == "number"){
+      tileId = tileThing;
+    }
+    if(typeof(tileThing) == "object"){
+      tileId = tileThing.id;
+    }
+    return this.tileUpdates.get(tileId);
+  }
 
   allTilesSubject: Subject<core.TileBase[]> = new Subject<core.TileBase[]>();
   greetingMessageSubject: Subject<core.GreetingMessage> = new Subject<core.GreetingMessage>();
-  connectionClosedSubject: Subject<{message:string}> = new Subject<{message:string}>();
+  connectionClosedSubject: Subject<{message:string, actions?: Array<{action: Function, text:string}>}> = new Subject();
   playerStatusSubject: Subject<{status:string, duration:number}> = new Subject();
 
   private retryInterval: Subscription;  
@@ -22,12 +35,12 @@ export class InfotainmentPiClientService {
   constructor(private messageReader: core.MessageReader) {
     this.configureSocket();
   }
-
-  private configureSocket(){
+ 
+  configureSocket(){
     this.ws = new WebSocket(environment.wsUrl);
     this.ws.onmessage = 
       (msg: MessageEvent) => {
-        let message = this.messageReader.getMessage(msg.data);
+        let message = (this.messageReader == null ? new core.MessageReader() : this.messageReader).getMessage(msg.data);
         let allTilesMessage = message as core.ReturnAllTilesMessage;
         if(allTilesMessage != null && allTilesMessage.type == core.MessageType.allTiles){
           //go ahead and new up the observables so they're ready for subscriptions for each of the tiles
@@ -54,11 +67,18 @@ export class InfotainmentPiClientService {
           this.playerStatusSubject.next({ status: `${playerStatusMessage.tile.name} ${playerStatusMessage.durationPlaying == -1 ? "stopped" : playerStatusMessage.durationPlaying.toString()}.`, duration: playerStatusMessage.durationPlaying });
           return;
         }
+
+        let obdReadingMessage = message as core.OBDReadingMessage;
+        if(obdReadingMessage != null && obdReadingMessage.type == core.MessageType.obdReading){
+          let subj = this.tileUpdates.get(obdReadingMessage.tile.id);
+          if(!subj)
+            return;
+          subj.next(obdReadingMessage);
+          return;
+        }
       };
     this.ws.onclose = () => {
-      //TODO - figure out why the retry has a loop somewhere
-      //this.connectionClosedSubject.next({ message: "Connection lost, retrying..." });
-      //this.retryInterval = Observable.timer(0, 5000).subscribe(t => this.configureSocket());
+      this.connectionClosedSubject.next({ message: "Connection lost...", actions:[ {action: () => this.configureSocket(), text: "Retry"} ] });
     };
     this.ws.onopen = (e: MessageEvent) => {
         if(this.retryInterval != null){

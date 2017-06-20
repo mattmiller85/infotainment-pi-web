@@ -1,6 +1,6 @@
-import { Subscription } from 'rxjs/Rx';
 import { InfotainmentPiClientService } from '../infotainment-pi-client.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Rx';
 
 @Component({
   selector: 'message-display',
@@ -9,6 +9,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 })
 export class MessageDisplayComponent implements OnInit, OnDestroy {
 
+  actions: Array<{action: Function, text: string}>;
   lastMessage: string = "Connecting...";
   subscriptions: Array<Subscription> = new Array<Subscription>();
 
@@ -21,9 +22,9 @@ export class MessageDisplayComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscribe(() => this.service.greetingMessageSubject.subscribe(gm => this.lastMessage = "You're connected to InfotainmentPi!"));
-    this.subscribe(() => this.service.connectionClosedSubject.subscribe(msg => this.lastMessage = msg.message));
-    this.subscribe(() => this.service.playerStatusSubject.subscribe(msg => this.lastMessage = msg.status));
+    this.subscribe(() => this.service.greetingMessageSubject.subscribe(gm => { this.lastMessage = "You're connected to InfotainmentPi!"; this.actions = null; }));
+    this.subscribe(() => this.service.connectionClosedSubject.subscribe(msg => { this.lastMessage = msg.message; this.actions = msg.actions; }));
+    this.subscribe(() => this.service.playerStatusSubject.subscribe(msg => { this.lastMessage = msg.status; this.actions = null }));
   }
 
   ngOnDestroy() {

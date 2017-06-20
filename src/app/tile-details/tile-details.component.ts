@@ -1,34 +1,30 @@
-import { ActivatedRoute } from '@angular/router';
+import { TileBase, TileType } from '../../../../infotainment-pi-core/core';
 import { InfotainmentPiClientService } from '../infotainment-pi-client.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { Component, OnInit } from '@angular/core';
-import { TileBase, TileType, SingleAudioFileTile, MessageType, SongStatusMessage } from '../../../../infotainment-pi-core/core';
 
 @Component({
   selector: 'tile-details',
   templateUrl: './tile-details.component.html',
   styleUrls: ['./tile-details.component.css']
 })
-export class TileDetailsComponent implements OnInit {
+export class TileDetailsComponent implements OnInit, OnDestroy {
 
-  public TileType = TileType;
+  TileType = TileType;
   tile: TileBase;
   current_duration: number = 0;
+  current_value: number = 0;
 
   private _paramSub: Subscription;
-  private _tileSub: Subscription;  
+  private _tileSub: Subscription;
 
   constructor(private service: InfotainmentPiClientService, private route: ActivatedRoute) { }
 
   ngOnInit() {    
     this._paramSub = this.route.params.subscribe(params => {
-      this._tileSub = this.service.tileUpdates.get(Number(params['id'])).subscribe(message => {
+      this._tileSub = this.service.updatesFor(Number(params['id'])).subscribe(message => {
         this.tile = message.tile;
-        if(message.type == MessageType.songStatus)
-        {
-          let msg = message as SongStatusMessage;
-          this.current_duration = msg.durationPlaying;
-        }
       });
       this.service.getTileById(Number(params['id']));
     });

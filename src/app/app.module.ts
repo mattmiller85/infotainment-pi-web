@@ -1,24 +1,38 @@
-import { environment } from '../environments/environment';
-import { InfotainmentPiClientService } from './infotainment-pi-client.service';
 import { MessageReader } from '../../../infotainment-pi-core/core';
-
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, InjectionToken } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { RouterModule, Routes } from '@angular/router';
-
+import { AddUpdateTileComponent } from './add-update-tile/add-update-tile.component';
 import { AppComponent } from './app.component';
+import { InfotainmentPiClientService } from './infotainment-pi-client.service';
+import { MessageDisplayComponent } from './message-display/message-display.component';
+import { ObdReadingTileSmallComponent } from './obd-reading-tile-small/obd-reading-tile-small.component';
+import { ObdReadingTileComponent } from './obd-reading-tile/obd-reading-tile.component';
+import {
+    SingleAudioFileTileSmallComponent
+} from './single-audio-file-tile-small/single-audio-file-tile-small.component';
+import { SingleAudioFileTileComponent } from './single-audio-file-tile/single-audio-file-tile.component';
+import { TileDetailsComponent } from './tile-details/tile-details.component';
 import { TileListComponent } from './tile-list/tile-list.component';
 import { TileComponent } from './tile/tile.component';
-import { MessageDisplayComponent } from './message-display/message-display.component';
-import { TileDetailsComponent } from './tile-details/tile-details.component';
-import { SingleAudioFileTileComponent } from './single-audio-file-tile/single-audio-file-tile.component';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule, Routes } from '@angular/router';
+
+
 
 const appRoutes: Routes = [
   { 
     path: 'tile/:id', 
-    component: TileDetailsComponent },
+    component: TileDetailsComponent 
+  },  
+  { 
+    path: 'tile-add', 
+    component: AddUpdateTileComponent 
+  },
+  { 
+    path: 'tile-update/:id', 
+    component: AddUpdateTileComponent 
+  },
   {
     path: 'tile-list',
     component: TileListComponent
@@ -37,7 +51,11 @@ const appRoutes: Routes = [
     TileComponent,
     MessageDisplayComponent,
     TileDetailsComponent,
-    SingleAudioFileTileComponent
+    SingleAudioFileTileComponent,
+    SingleAudioFileTileSmallComponent,
+    ObdReadingTileSmallComponent,
+    ObdReadingTileComponent,
+    AddUpdateTileComponent
   ],
   imports: [
     BrowserModule,
