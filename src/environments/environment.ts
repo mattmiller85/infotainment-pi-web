@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  wsUrl: "ws://localhost:12345"
+  wsUrl: 'ws://localhost:12345'
 };

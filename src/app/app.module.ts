@@ -6,7 +6,7 @@ import { MessageDisplayComponent } from './message-display/message-display.compo
 import { ObdReadingTileSmallComponent } from './obd-reading-tile-small/obd-reading-tile-small.component';
 import { ObdReadingTileComponent } from './obd-reading-tile/obd-reading-tile.component';
 import {
-    SingleAudioFileTileSmallComponent
+  SingleAudioFileTileSmallComponent
 } from './single-audio-file-tile-small/single-audio-file-tile-small.component';
 import { SingleAudioFileTileComponent } from './single-audio-file-tile/single-audio-file-tile.component';
 import { TileDetailsComponent } from './tile-details/tile-details.component';
@@ -17,27 +17,32 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
-
-
+import { TileRemoveComponent } from './tile-remove/tile-remove.component';
+import { HomeHeaderLinkComponent } from './home-header-link/home-header-link.component';
 
 const appRoutes: Routes = [
-  { 
-    path: 'tile/:id', 
-    component: TileDetailsComponent 
-  },  
-  { 
-    path: 'tile-add', 
-    component: AddUpdateTileComponent 
+  {
+    path: 'tile/:id',
+    component: TileDetailsComponent
   },
-  { 
-    path: 'tile-update/:id', 
-    component: AddUpdateTileComponent 
+  {
+    path: 'tile-add',
+    component: AddUpdateTileComponent
+  },
+  {
+    path: 'tile-update/:id',
+    component: AddUpdateTileComponent
+  },
+  {
+    path: 'tile-remove/:id',
+    component: TileRemoveComponent
   },
   {
     path: 'tile-list',
     component: TileListComponent
   },
-  { path: '',
+  {
+    path: '',
     redirectTo: 'tile-list',
     pathMatch: 'full'
   },
@@ -55,7 +60,9 @@ const appRoutes: Routes = [
     SingleAudioFileTileSmallComponent,
     ObdReadingTileSmallComponent,
     ObdReadingTileComponent,
-    AddUpdateTileComponent
+    AddUpdateTileComponent,
+    TileRemoveComponent,
+    HomeHeaderLinkComponent
   ],
   imports: [
     BrowserModule,

@@ -1,17 +1,16 @@
-import { TileBase, TileType, MessageType } from '../../../../infotainment-pi-core/core';
-import { InfotainmentPiClientService } from '../infotainment-pi-client.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
+import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TileBase, MessageType } from '../../../../infotainment-pi-core/core';
+import { InfotainmentPiClientService } from 'app/infotainment-pi-client.service';
 
 @Component({
-  selector: 'tile-details',
-  templateUrl: './tile-details.component.html',
-  styleUrls: ['./tile-details.component.css']
+  selector: 'tile-remove',
+  templateUrl: './tile-remove.component.html',
+  styleUrls: ['./tile-remove.component.css']
 })
-export class TileDetailsComponent implements OnInit, OnDestroy {
+export class TileRemoveComponent implements OnInit, OnDestroy {
 
-  TileType = TileType;
   tile: TileBase;
   current_duration: number = 0;
   current_value: number = 0;
@@ -34,4 +33,5 @@ export class TileDetailsComponent implements OnInit, OnDestroy {
     this._paramSub.unsubscribe();
     this._tileSub.unsubscribe();
   }
+
 }
