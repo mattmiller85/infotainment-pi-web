@@ -1,4 +1,4 @@
-<div class="alert alert-info" role="alert">
+<div class="alert alert-info mb-1" role="alert">
   {{ lastMessage }} 
   <span *ngIf="actions && actions.length > 0">
     <button class="btn btn-default mr-2" *ngFor="let action of actions" (click)="action.action()">{{action.text}}</button>

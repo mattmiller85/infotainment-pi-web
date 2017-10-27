@@ -11,16 +11,15 @@ import { Subscription } from 'rxjs/Rx';
 export class SingleAudioFileTileComponent implements OnInit, OnDestroy {
 
   @Input() tile: SingleAudioFileTile = new SingleAudioFileTile();
-  current_progress: number = 0;
+  current_progress = 0;
   private _tileSub: Subscription;
 
   constructor(private service: InfotainmentPiClientService) { }
-  
+
   ngOnInit() {
     this._tileSub = this.service.updatesFor(this.tile).subscribe(message => {
-      if(message.type == MessageType.songStatus)
-      {
-        let msg = message as SongStatusMessage;
+      if (message.type === MessageType.songStatus) {
+        const msg = message as SongStatusMessage;
         this.current_progress = msg.durationPlaying;
       }
     });

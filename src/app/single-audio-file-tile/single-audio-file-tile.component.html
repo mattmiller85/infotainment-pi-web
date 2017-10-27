@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col">
         <div class="progress">
-            <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="current_progress" aria-valuemin="0" [attr.aria-valuemax]="tile.duration_seconds"></div>
+            <div class="progress-bar active" style="transition-duration: 1s;" [style.width]="((current_progress/100) * 100) + '%'" role="progressbar" [attr.aria-valuenow]="current_progress" aria-valuemin="0" [attr.aria-valuemax]="tile.duration_seconds"></div>
         </div>
     </div>
 </div>

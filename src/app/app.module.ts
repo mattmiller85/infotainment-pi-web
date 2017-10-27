@@ -12,13 +12,15 @@ import { SingleAudioFileTileComponent } from './single-audio-file-tile/single-au
 import { TileDetailsComponent } from './tile-details/tile-details.component';
 import { TileListComponent } from './tile-list/tile-list.component';
 import { TileComponent } from './tile/tile.component';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { TileRemoveComponent } from './tile-remove/tile-remove.component';
 import { HomeHeaderLinkComponent } from './home-header-link/home-header-link.component';
+import { CastTileSmallComponent } from './cast-tile-small/cast-tile-small.component';
+import { CastTileComponent } from './cast-tile/cast-tile.component';
 
 const appRoutes: Routes = [
   {
@@ -62,7 +64,9 @@ const appRoutes: Routes = [
     ObdReadingTileComponent,
     AddUpdateTileComponent,
     TileRemoveComponent,
-    HomeHeaderLinkComponent
+    HomeHeaderLinkComponent,
+    CastTileSmallComponent,
+    CastTileComponent
   ],
   imports: [
     BrowserModule,
@@ -71,6 +75,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes)
   ],
   providers: [MessageReader, InfotainmentPiClientService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class AppModule { }

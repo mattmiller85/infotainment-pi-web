@@ -1,6 +1,7 @@
-<div class="row">
-    <div *ngFor="let t of tiles" style="width: 175px !important;" class="col tile_thumb_container mr-1 mb-1" (click)="navigateToTile(t)">
-        <tile [tile]="t"></tile>
+<div class="row mb-1" *ngFor="let tiles of tileChunks">
+    <div *ngFor="let t of tiles" class="col-sm tile_thumb_container" (click)="navigateToTile(t)">
+        <tile *ngIf="t" [tile]="t"></tile>
+        <div *ngIf="!t"></div>
     </div>
 </div>
 <div class="row">

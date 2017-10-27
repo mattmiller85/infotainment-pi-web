@@ -1,10 +1,10 @@
-<div class="card h-100">
+<div class="card h-100 text-center">
   <div class="card-img-top">
     <single-audio-file-tile-small *ngIf="tile.type == TileType.single_audio_file" [tile]="tile"></single-audio-file-tile-small>
     <obd-reading-tile-small *ngIf="tile.type == TileType.digital_obd_ii_sensor" [tile]="tile"></obd-reading-tile-small>
   </div>
-  <div class="card-block">
-    <h4 class="card-title">{{ tile.name }}</h4>
-    <p class="card-text">{{ tile.description }}</p>
+  <div class="card-block p-1">
+    <h6 class="card-title mb-1">{{ tile.name }}</h6>
+    <div class="card-text">{{ tile.description }}</div>
   </div>
 </div>

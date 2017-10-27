@@ -3,6 +3,7 @@
   <div class="col">
     <single-audio-file-tile *ngIf="tile.type == TileType.single_audio_file" [tile]="tile"></single-audio-file-tile>
     <obd-reading-tile *ngIf="tile.type == TileType.digital_obd_ii_sensor" [tile]="tile"></obd-reading-tile>
+    <cast-tile *ngIf="tile.type == TileType.cast" [tile]="tile"></cast-tile>
   </div>
 </div>
 <div class="row mt-2">

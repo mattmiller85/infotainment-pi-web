@@ -10,13 +10,31 @@ import { Router } from '@angular/router';
 })
 export class TileListComponent implements OnInit {
 
-  tiles: Array<TileBase> = [];
+  //tiles: Array<TileBase> = [];
+  tileChunks = new Array<TileBase[]>();
+  private perRow = 4;
 
   constructor(private service: InfotainmentPiClientService, private router: Router) {
-    this.tiles = new Array<any>();
+
     this.service.allTilesSubject.subscribe(tls => {
-        this.tiles.length = 0;
-        tls.forEach(t => this.tiles.push(t));
+        this.tileChunks.length = 0;
+        let chunkEnd = this.perRow;
+        let chunkStart = 0;
+        let chunk = tls.slice(chunkStart, chunkEnd);
+        this.tileChunks.push(chunk);
+        while (chunk && chunk.length > 0 && chunkStart <= tls.length) {
+          chunkStart = chunkEnd;
+          chunkEnd = chunkEnd + this.perRow;
+          chunk = tls.slice(chunkStart, chunkEnd);
+          const shortTiles = this.perRow - chunk.length;
+          if (shortTiles < 4) {
+            for (let i = 0; i < shortTiles; i++) {
+              chunk.push(null);
+            }
+            this.tileChunks.push(chunk);
+          }
+        }
+
     });
   }
 
@@ -24,7 +42,7 @@ export class TileListComponent implements OnInit {
     this.service.askForAllTiles();
   }
 
-  navigateToTile(tile: TileBase){
-    this.router.navigate(["tile", tile.id]);
+  navigateToTile(tile: TileBase) {
+    this.router.navigate(['tile', tile.id]);
   }
 }
